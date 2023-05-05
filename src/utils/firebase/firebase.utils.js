@@ -1,61 +1,68 @@
-import { initializeApp  } from 'firebase/app';
-import { 
-    getAuth, 
-    signInWithRedirect, 
-    signInWithPopup,
-    GoogleAuthProvider 
-} from 'firebase/auth';
-import { 
-    getFirestore, 
-    doc, 
-    getDoc,
-    setDoc 
-} from 'firebase/firestore';
-
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signInWithRedirect,
+  signInWithPopup,
+  GoogleAuthProvider,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBC53H0W_XAUDSOKo1fOA2-RnoaHPySdAY",  
-    authDomain: "e-crown-practice-db.firebaseapp.com",  
-    projectId: "e-crown-practice-db",  
-    storageBucket: "e-crown-practice-db.appspot.com",  
-    messagingSenderId: "263246194182",  
-    appId: "1:263246194182:web:5c581ac32b5ae0f6e34587"  
-  };
-     
-  const firebaseApp = initializeApp(firebaseConfig);
+  apiKey: "AIzaSyBHUgNLKduRQ8V8Vykz0vQg_IRWkLl5QhA",
+  authDomain: "practice-db-aae93.firebaseapp.com",
+  projectId: "practice-db-aae93",
+  storageBucket: "practice-db-aae93.appspot.com",
+  messagingSenderId: "780630952525",
+  appId: "1:780630952525:web:0fb972c69dbd3ac741aa04",
+};
 
-  const provider = new GoogleAuthProvider();
-  provider.setCustomParameters({
-    prompt: 'select_account'
-  });
+const firebaseApp = initializeApp(firebaseConfig);
 
-  export const auth = getAuth();
-  export const signInWithGooglePopup = () => signInWithPopup( auth, provider );
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: "select_account",
+});
 
-  export const db = getFirestore();
+export const auth = getAuth();
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, googleProvider);
 
-  export const createUserDocumentFromAuth = async (userAuth) => {
-    const userDocRef = doc(db, 'users', userAuth.uid);
-    console.log(userDocRef);
+export const db = getFirestore();
 
-    const userSnapshot = await getDoc(userDocRef);
-    console.log(userSnapshot);
-    console.log(userSnapshot.exists());
+export const createUserDocumentFromAuth = async (
+  userAuth,
+  additionalInformation = {}
+) => {
+  if (!userAuth) return;
 
-    if(!userSnapshot.exists()) {
-        const { displayName, email } = userAuth;
-        const createdAt = new Date();
+  const userDocRef = doc(db, "users", userAuth.uid);
 
-        try{
-            await setDoc(userDocRef, {
-                displayName,
-                email,
-                createdAt
-            })
-        } catch (error) {
-            console.log('Error creating a new user:', error.message);
-        }
+  const userSnapshot = await getDoc(userDocRef);
+
+  if (!userSnapshot.exists()) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+        ...additionalInformation,
+      });
+    } catch (error) {
+      console.log("Error creating a new user:", error.message);
     }
+  }
 
-    return userDocRef;
-  };
+  return userDocRef;
+};
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+
+  return await createUserWithEmailAndPassword(auth, email, password);
+};
