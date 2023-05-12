@@ -6,7 +6,7 @@ import ShoppingIcon from "../../assets/shopping-bag.svg";
 import "./cart-icon.styles.scss";
 
 const CartIcon = () => {
-  const { isCartOpen, setIsCartOpen } = useContext(CartContext);
+  const { isCartOpen, setIsCartOpen, cartCount } = useContext(CartContext);
 
   const toggleCartDropdownHandler = () => {
     setIsCartOpen(!isCartOpen);
@@ -15,7 +15,7 @@ const CartIcon = () => {
   return (
     <div className="cart-icon-container" onClick={toggleCartDropdownHandler}>
       <img src={ShoppingIcon} className="shopping-icon" alt="shopping-icon" />
-      <span className="item-count">19</span>
+      <span className="item-count">{cartCount}</span>
     </div>
   );
 };
