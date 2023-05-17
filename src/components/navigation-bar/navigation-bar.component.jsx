@@ -14,7 +14,7 @@ import "./navigation-bar.styles.scss";
 const NavigationBar = () => {
   const { currentUser } = useContext(UserContext);
   const { isCartOpen } = useContext(CartContext);
-  console.log(currentUser);
+  //   console.log(currentUser);
 
   return (
     <Fragment>
