@@ -9,7 +9,13 @@ import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 
 import CrwnLogo from "../../assets/crown.svg";
-import "./navigation-bar.styles.scss";
+import {
+  Navigation,
+  LogoContainer,
+  Logo,
+  NavLinks,
+  NavLink,
+} from "./navigation-bar.styles";
 
 const NavigationBar = () => {
   const { currentUser } = useContext(UserContext);
@@ -18,28 +24,24 @@ const NavigationBar = () => {
 
   return (
     <Fragment>
-      <div className="navigation">
-        <Link className="logo-container" to="/">
-          <img src={CrwnLogo} className="logo" alt="logo" />
-        </Link>
+      <Navigation>
+        <LogoContainer to="/">
+          <Logo src={CrwnLogo} alt="logo" />
+        </LogoContainer>
 
-        <div className="nav-links-container">
-          <Link className="nav-link" to="/shop">
-            Shop
-          </Link>
+        <NavLinks>
+          <NavLink to="/shop">Shop</NavLink>
           {currentUser ? (
-            <span className="nav-link" onClick={signOutUser}>
+            <NavLink as="span" onClick={signOutUser}>
               Sign Out
-            </span>
+            </NavLink>
           ) : (
-            <Link className="nav-link" to="/auth">
-              Sign In
-            </Link>
+            <NavLink to="/auth">Sign In</NavLink>
           )}
           <CartIcon />
-        </div>
+        </NavLinks>
         {isCartOpen && <CartDropdown />}
-      </div>
+      </Navigation>
       <Outlet />
     </Fragment>
   );
