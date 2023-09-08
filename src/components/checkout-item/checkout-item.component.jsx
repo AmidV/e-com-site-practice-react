@@ -1,3 +1,5 @@
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   CheckOutContainer,
   ImageContainer,
@@ -9,6 +11,7 @@ import {
   Arrow,
   RemoveButton,
 } from "./checkout-item.styles";
+import { selectCartItems } from "../../store/cart/cart.selector";
 
 const CheckoutItem = ({
   individualItem,
@@ -16,13 +19,19 @@ const CheckoutItem = ({
   removeItemFromCart,
   removeCartItemButton,
 }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+
   const { name, imageUrl, price, quantity } = individualItem;
 
-  const addItemHandler = () => addItemToCart(individualItem);
+  const addItemHandler = () =>
+    dispatch(addItemToCart(cartItems, individualItem));
 
-  const removeItemHandler = () => removeItemFromCart(individualItem);
+  const removeItemHandler = () =>
+    dispatch(removeItemFromCart(cartItems, individualItem));
 
-  const removeButtonHandler = () => removeCartItemButton(individualItem);
+  const removeButtonHandler = () =>
+    dispatch(removeCartItemButton(cartItems, individualItem));
 
   return (
     <CheckOutContainer>
